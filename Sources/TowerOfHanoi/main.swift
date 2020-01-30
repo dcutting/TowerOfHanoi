@@ -1,26 +1,31 @@
 import Foundation
 import TowerOfHanoiLib
 
-func play() -> Bool {
+struct InputError: Error {}
+
+func play() throws {
     print("How many discs? ", terminator: "")
 
-    guard let input = readLine() else { return false }
-    guard let discs = Int(input) else { return false }
+    guard
+        let input = readLine(),
+        let discs = Int(input)
+    else { throw InputError() }
 
     if discs > 10 {
         let count = pow(2, discs) - 1
         print("That takes \(count) moves!")
-        return true
+    } else {
+        let moves = move(discs: discs, source: "A", target: "B", spare: "C")
+        print(moves)
     }
-
-    let moves = move(discs: discs, source: "A", target: "B", spare: "C")
-    print(moves)
-    return true
 }
 
 print("Tower of Hanoi")
 
-var isPlaying = true
-while isPlaying {
-    isPlaying = play()
+while true {
+    do {
+        try play()
+    } catch {
+        exit(0)
+    }
 }
